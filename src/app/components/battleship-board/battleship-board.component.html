@@ -1,0 +1,16 @@
+<div class="status">{{ status() }}</div>
+<div class="board">
+  @for (row of board(); track row; let y = $index ) {
+  <div class="row">
+    @for (cell of row; track cell; let x = $index) {
+    <div class="cell" (click)="onCellClick(x, y)" [ngClass]="cellClass(cell)">
+      @if (cell.state === 'hit') {
+      <span>X</span>
+      } @if (cell.state === 'miss') {
+      <span>O</span>
+      }
+    </div>
+    }
+  </div>
+  }
+</div>
