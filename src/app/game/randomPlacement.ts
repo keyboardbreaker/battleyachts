@@ -12,10 +12,16 @@ export function placeShipsRandomly(board: Board, shipsToPlace: number[]) {
   board.clear();
 
   function coordsFor(x: number, y: number, len: number, horizontal: boolean): Coord[] {
-    return Array.from({ length: len }, (_, i) => ({
-      x: x + (horizontal ? i : 0),
-      y: y + (horizontal ? 0 : i),
-    }));
+    const coords: Coord[] = [];
+
+    for (let i = 0; i < len; i++) {
+      coords.push({
+        x: x + (horizontal ? i : 0),
+        y: y + (horizontal ? 0 : i),
+      });
+    }
+  
+    return coords;
   }
 
   for (const len of shipsToPlace) {

@@ -1,4 +1,3 @@
-// board.ts
 import { Cell, CellState, Coord } from './types';
 import { Ship } from './ship';
 
@@ -15,13 +14,19 @@ export class Board {
   }
 
   private makeEmptyGrid() {
-    this.grid = Array.from({ length: this.size }, (_, y) =>
-      Array.from({ length: this.size }, (_, x) => ({
-        x,
-        y,
-        state: CellState.Empty,
-      }))
-    );
+    this.grid = [];
+
+    for (let y = 0; y < this.size; y++) {
+      const row: Cell[] = [];
+      for (let x = 0; x < this.size; x++) {
+        row.push({
+          x,
+          y,
+          state: CellState.Empty,
+        });
+      }
+      this.grid.push(row);
+    }
   }
 
   getCell(coord: Coord) {
