@@ -4,15 +4,12 @@
   width: 32px;
   height: 32px;
   border: 1px solid #999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   cursor: pointer;
   user-select: none;
 }
 .cell.hit { background: #e74c3c; color: white; }
 .cell.miss { background: #95a5a6; color: white; }
-
-.cell.ship {
-  background-color: #3498db; /* Blue for ships */
-}
+.cell.ship { background-color: #3498db; } /* only visible in own mode */

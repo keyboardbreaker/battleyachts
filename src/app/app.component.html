@@ -1,0 +1,25 @@
+<h1>Battle-yachts</h1>
+
+@if (!showBoards()) {
+  <div class="pass-screen">
+    <p>Pass the device to Player {{ nextPlayer() }} — click to continue</p>
+    <button (click)="revealBoards()">Start Turn</button>
+  </div>
+} @else {
+  <div class="controls">
+    <div>Current Player: {{ currentPlayer() }}</div>
+    <button (click)="endTurn()">End Turn / Pass</button>
+    <button (click)="newGame()">New Game</button>
+  </div>
+
+  <div class="boards">
+    <div>
+      <h2>Your Board</h2>
+      <app-battleship-board mode="own" [viewer]="currentPlayer()"></app-battleship-board>
+    </div>
+    <div>
+      <h2>Opponent's Board</h2>
+      <app-battleship-board mode="opponent" [viewer]="currentPlayer()"></app-battleship-board>
+    </div>
+  </div>
+}

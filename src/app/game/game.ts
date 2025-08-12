@@ -2,46 +2,58 @@ import { Board } from './board';
 import { placeShipsRandomly } from './randomPlacement';
 import { Coord } from './types';
 
+export type PlayerId = 1 | 2;
+
 export class Game {
-  playerBoard: Board;   // player's ships
-  enemyBoard: Board;    // AI ships (hidden)
+  player1Board: Board;
+  player2Board: Board;
   size: number;
-  moves: number;
+  currentPlayer: PlayerId;
 
-  constructor(size = 10, shipLengths = [5,4,3,3,2]) {
+  constructor(size = 10, shipLengths = [5, 4, 3, 3, 2]) {
     this.size = size;
-    this.playerBoard = new Board(size);
-    this.enemyBoard = new Board(size);
-    this.moves = 0;
-
-    // Example: auto-place enemy ships
-    placeShipsRandomly(this.enemyBoard, shipLengths);
+    this.player1Board = new Board(size);
+    this.player2Board = new Board(size);
+    this.currentPlayer = 1;
+    // default: random place both sides for quick start (you can add manual placement later)
+    placeShipsRandomly(this.player1Board, shipLengths);
+    placeShipsRandomly(this.player2Board, shipLengths);
   }
 
-  startWithPlayerShips(shipLengths = [5,4,3,3,2]) {
-    placeShipsRandomly(this.playerBoard, shipLengths);
+  getBoardForPlayer(player: PlayerId) {
+    return player === 1 ? this.player1Board : this.player2Board;
   }
 
-  playerAttack(coord: Coord) {
-    // Attack enemy board
-    this.moves++;
-    return this.enemyBoard.receiveAttack(coord);
+  getOpponentBoard(player: PlayerId) {
+    return player === 1 ? this.player2Board : this.player1Board;
   }
 
-  aiRandomAttack() {
-    // Simple AI: random untried cell
-    while (true) {
-      const x = Math.floor(Math.random() * this.size);
-      const y = Math.floor(Math.random() * this.size);
-      const cell = this.playerBoard.getCell({ x, y });
-      if (cell.state === 'hit' || cell.state === 'miss') continue;
-      return this.playerBoard.receiveAttack({ x, y });
+  // current player attacks opponent at coord
+  attackByCurrentPlayer(coord: Coord) {
+    const opponent = this.getOpponentBoard(this.currentPlayer);
+    const res = opponent.receiveAttack(coord);
+    // only switch turn if attack was ok (invalid moves don't progress turn)
+    if (res.ok) {
+      // don't switch if game ends immediately (optional: still switch but unnecessary)
+      if (!opponent.allShipsSunk()) {
+        this.currentPlayer = this.currentPlayer === 1 ? 2 : 1;
+      }
     }
+    return res;
   }
 
-  checkWin() {
-    if (this.enemyBoard.allShipsSunk()) return 'player';
-    if (this.playerBoard.allShipsSunk()) return 'enemy';
-    return null;
+  // convenience: check if a player has lost
+  isPlayerDefeated(player: PlayerId) {
+    const board = this.getBoardForPlayer(player);
+    return board.allShipsSunk();
+  }
+
+  // reset or new game helper
+  reset(shipLengths = [5, 4, 3, 3, 2]) {
+    this.player1Board.clear();
+    this.player2Board.clear();
+    placeShipsRandomly(this.player1Board, shipLengths);
+    placeShipsRandomly(this.player2Board, shipLengths);
+    this.currentPlayer = 1;
   }
 }
