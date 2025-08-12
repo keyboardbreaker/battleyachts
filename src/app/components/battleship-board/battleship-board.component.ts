@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameService } from '../../services/game.service';
-import { CellState } from '../../game/types';
+import { Cell, CellState } from '../../game/types';
 import type { PlayerId } from '../../game/game';
 
 @Component({
@@ -15,7 +15,7 @@ export class BattleshipBoardComponent implements OnInit {
   @Input() mode: 'own' | 'opponent' = 'opponent'; // which visualization mode
   @Input() viewer: PlayerId = 1; // which player is looking at this board
 
-  board = signal<any[][]>([]);
+  board = signal<Cell[][]>([]);
   status = signal('');
 
   constructor(private gameService: GameService) {}

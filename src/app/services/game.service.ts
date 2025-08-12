@@ -2,6 +2,12 @@ import { Injectable, signal } from '@angular/core';
 import { Game, PlayerId } from '../game/game';
 import { CellState } from '../game/types';
 
+export interface Cell {
+  x: number;
+  y: number;
+  state: CellState;
+}
+
 @Injectable({ providedIn: 'root' })
 export class GameService {
   game = signal(new Game(10));
